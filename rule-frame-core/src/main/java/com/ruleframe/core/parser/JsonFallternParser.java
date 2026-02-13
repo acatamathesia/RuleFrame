@@ -9,13 +9,44 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ruleframe.utils.JsonUtil;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * json数据扁平化解析器
  */
+@Slf4j
 public class JsonFallternParser {
 
+    /**
+     * 解析字符串类型的json数据
+     * 
+     * @param json 字符串的json数据
+     * @return 扁平化的处理结果，类型是MAP
+     * @throws JsonMappingException
+     * @throws JsonProcessingException
+     */
+    public static Map<String, String> parserToMap(String json) throws JsonMappingException, JsonProcessingException {
+        JsonNode root = JsonUtil.getObjectMapper().readTree(json);
+        return parserToMap(root);
+    }
+
+    /**
+     * 根据解析后的JsonNode进行扁平化处理，返回扁平化后的Map对象
+     */
     public static Map<String, String> parserToMap(JsonNode resultJsonNode) {
+        if (resultJsonNode == null) {
+            throw new IllegalArgumentException("Json数据不能为null");
+        }
+        if (resultJsonNode.isArray()) {
+            log.info("Json数据是数组类型, 开始数组解析");
+            return arrayNodeParser(resultJsonNode, "root");
+        }
+        if (!resultJsonNode.isObject()) {
+            throw new IllegalArgumentException("非Json数据");
+        }
+        log.info("Json数据是对象类型, 开始对象解析");
         // 首先判断节点数据类型，然后确定节点处理方式
         PaserResult pr = objectNodeParser(resultJsonNode);
         Map<String, String> result = pr.fieldMap;
