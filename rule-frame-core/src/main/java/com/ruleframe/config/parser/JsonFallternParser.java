@@ -1,7 +1,5 @@
-package com.ruleframe.core.parser;
+package com.ruleframe.config.parser;
 
-import java.io.PrintStream;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -120,8 +118,6 @@ public class JsonFallternParser {
 
     public static void main(String[] args) {
         // 初始化 UTF-8 编码
-        com.ruleframe.core.EncodingInitializer.init();
-
         String jsonStr = "{\"invoiceCode\":\"0001\",\"invoiceTime\":\"2025-10-21\",\"details\":[{\"code\":\"1\",\"name\":\"测试数据\",\"obj\":{\"info\":\"你好世界\",\"array\":[\"难顶\"]}},{\"code\":\"1\",\"name\":\"测试数据\"},\"测试数据\",\"测试数据01\"]}";
         try {
             JsonNode jsonResultNode = new ObjectMapper().readTree(jsonStr);
