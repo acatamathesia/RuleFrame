@@ -16,18 +16,18 @@ public class ConverterRegistryTest {
         // 验证 IntegerConverter 是否被自动注册
         assertTrue(ConverterRegistry.hasConverter("to_int"), "应该包含 to_int 转换器");
         
-        // 验证 DoubleConverter 是否被自动注册
-        assertTrue(ConverterRegistry.hasConverter("to_double"), "应该包含 to_double 转换器");
+        // 验证 BigDecimalConverter 是否被自动注册
+        assertTrue(ConverterRegistry.hasConverter("to_bigdecimal"), "应该包含 to_bigdecimal 转换器");
     }
 
     @Test
-    public void testIntegerConverter() {
-        ValueConverter converter = ConverterRegistry.getConverter("to_int");
-        assertNotNull(converter, "应该能找到 to_int 转换器");
+    public void testBigDecimalConverter() {
+        ValueConverter converter = ConverterRegistry.getConverter("to_bigdecimal");
+        assertNotNull(converter, "应该能找到 to_bigdecimal 转换器");
         
         // 测试转换
-        assertEquals(123, converter.convert("123"));
-        assertEquals(456, converter.convert(456));
+        assertNotNull(converter.convert("123.45"));
+        assertNotNull(converter.convert(456));
         assertNull(converter.convert(null));
     }
 

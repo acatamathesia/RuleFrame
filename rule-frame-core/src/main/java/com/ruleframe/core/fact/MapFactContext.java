@@ -1,30 +1,61 @@
 package com.ruleframe.core.fact;
 
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.ruleframe.config.parser.JsonFallternParser;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 映射数据取值器
  * 涉及：JSON
  */
 @AllArgsConstructor
+@Slf4j
 public class MapFactContext implements FactContext {
 
-    private final JsonNode jsonNode;
+    private final String json;
+    private final Map<String,String> PARSER_MAP;
+
+    public MapFactContext(String jsonResult) {
+        json = jsonResult;
+        try {
+            PARSER_MAP  = JsonFallternParser.parserToMap(jsonResult);
+        } catch (JsonProcessingException e) {
+            log.error(json);
+            throw new RuntimeException("解析json结果失败");
+        }
+    }
 
     @Override
     public Object getValue(String path) {
-        if (path == null || path.trim().length() == 0){
+        if (PARSER_MAP.isEmpty()) {
             return null;
         }
-        // */xx, xx[1]/xx, xx[*]/xx, xx[0]/*/xx
-        Map<String, String> pMap = JsonFallternParser.parserToMap(jsonNode);
-        return pMap.get(path);
+        return PARSER_MAP.get(path);
     }
+
+    @Override
+    public Set<String> getFactNames() {
+        return Collections.unmodifiableSet(PARSER_MAP.keySet());
+    }
+
+    @Override
+    public boolean hasFact(String name) {
+        return PARSER_MAP.containsKey(name);
+    }
+    
+    
     
 }
