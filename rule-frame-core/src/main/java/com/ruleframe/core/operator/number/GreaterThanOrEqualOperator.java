@@ -1,0 +1,24 @@
+package com.ruleframe.core.operator.number;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+import com.ruleframe.core.operator.AutoRegisterOperator;
+
+/**
+ * 大于等于操作符 (>=)
+ */
+@AutoRegisterOperator(">=")
+public class GreaterThanOrEqualOperator extends NumberOperator {
+
+    @Override
+    protected boolean simpleApply(BigDecimal factValue, BigDecimal expectedValue) {
+        return factValue.compareTo(expectedValue) >= 0;
+    }
+
+    @Override
+    protected boolean listApply(List<BigDecimal> factValues, BigDecimal expectedValue) {
+        return factValues.stream()
+                .allMatch(v -> v.compareTo(expectedValue) >= 0);
+    }
+}
