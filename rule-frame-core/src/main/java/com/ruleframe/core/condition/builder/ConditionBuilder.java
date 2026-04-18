@@ -8,10 +8,8 @@ import com.ruleframe.core.condition.LeafCondition;
 import com.ruleframe.core.condition.LogicalOperator;
 import com.ruleframe.core.element.ConfigurableElement;
 import com.ruleframe.core.element.Element;
-import com.ruleframe.core.element.ElementValue;
 import com.ruleframe.core.fact.FactContext;
 import com.ruleframe.core.fact.MapFactContext;
-import com.ruleframe.core.operator.Operator;
 import com.ruleframe.core.operator.OperatorRegistry;
 import com.ruleframe.resolver.MapPathResolver;
 

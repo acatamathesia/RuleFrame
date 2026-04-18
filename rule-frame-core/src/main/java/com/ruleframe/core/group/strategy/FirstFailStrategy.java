@@ -2,6 +2,7 @@ package com.ruleframe.core.group.strategy;
 
 import com.ruleframe.core.group.GroupResult;
 import com.ruleframe.core.group.RuleGroup;
+import com.ruleframe.core.condition.ConditionResult;
 import com.ruleframe.core.fact.FactContext;
 import com.ruleframe.core.rule.Rule;
 import com.ruleframe.core.rule.RuleResult;
@@ -15,12 +16,16 @@ public class FirstFailStrategy implements ExecutionStrategy {
 
     @Override
     public GroupResult execute(RuleGroup ruleGroup, FactContext factContext) {
-        // TODO: 实现首次失败策略逻辑
         List<RuleResult> allResults = new ArrayList<>();
         List<RuleResult> failedRules = new ArrayList<>();
 
         for (Rule rule : ruleGroup.getRules()) {
-            // TODO: 执行规则，如果失败则立即返回
+            RuleResult result = rule.execute(factContext);
+            allResults.add(result);
+            if (!result.isPassed()) {
+                failedRules.add(result);
+                break;
+            }
         }
 
         boolean allPassed = failedRules.isEmpty();

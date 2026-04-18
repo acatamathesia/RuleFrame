@@ -2,6 +2,7 @@ package com.ruleframe.core.condition;
 
 import java.util.List;
 
+import com.ruleframe.core.condition.visitor.ConditionVisitor;
 import com.ruleframe.core.element.Element;
 import com.ruleframe.core.element.ElementValue;
 import com.ruleframe.core.entity.enums.SystemMessage;
@@ -74,6 +75,11 @@ public class LeafCondition implements Condition {
         }
         return failureCode + "-" + failureMessage.replace("{factValue}", factValue.toString())
                 .replace("{expectedValue}", expectedValue.toString());
+    }
+
+    @Override
+    public <T> T accept(ConditionVisitor<T> visitor) {
+        return visitor.visit(this);
     }
 
 }

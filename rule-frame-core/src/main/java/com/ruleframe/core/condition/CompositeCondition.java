@@ -1,10 +1,10 @@
 package com.ruleframe.core.condition;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.ruleframe.core.condition.visitor.ConditionVisitor;
 import com.ruleframe.core.fact.FactContext;
 
 import lombok.Data;
@@ -63,6 +63,11 @@ public class CompositeCondition implements Condition {
         }
         return ConditionResult.failure(failureResultList.stream()
                 .map(ConditionResult::getFailureReason).collect(Collectors.joining(";")));
+    }
+
+        @Override
+    public <T> T accept(ConditionVisitor<T> visitor) {
+        return visitor.visit(this);
     }
 
 }

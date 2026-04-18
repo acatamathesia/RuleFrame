@@ -15,12 +15,16 @@ public class FirstSuccessStrategy implements ExecutionStrategy {
 
     @Override
     public GroupResult execute(RuleGroup ruleGroup, FactContext factContext) {
-        // TODO: 实现首次成功策略逻辑
         List<RuleResult> allResults = new ArrayList<>();
         List<RuleResult> failedRules = new ArrayList<>();
 
         for (Rule rule : ruleGroup.getRules()) {
-            // TODO: 执行规则，如果成功则立即返回
+            RuleResult result = rule.execute(factContext);
+            allResults.add(result);
+            if (result.isPassed()) {
+                break;
+            }
+            failedRules.add(result);
         }
 
         boolean allPassed = failedRules.isEmpty();
