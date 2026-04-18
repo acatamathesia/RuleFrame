@@ -4,9 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import lombok.ToString;
+
 /**
  * 条件计算结果（含失败原因）
  */
+@ToString
 public class ConditionResult {
 
     private boolean passed;
