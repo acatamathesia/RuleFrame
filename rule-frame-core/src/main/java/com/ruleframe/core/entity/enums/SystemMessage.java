@@ -1,7 +1,5 @@
 package com.ruleframe.core.entity.enums;
 
-import java.util.function.Function;
-
 import lombok.Getter;
 
 @Getter
@@ -11,15 +9,17 @@ public enum SystemMessage {
 
     private final String code;
     private final String message;
-    private final Function<String, String> messageFunction;
 
     private SystemMessage(String code, String message) {
         this.code = code;
         this.message = message;
-        this.messageFunction = item_msg -> this.message + item_msg;
     }
 
     public String getMessage(String item_msg) {
-        return messageFunction.apply(item_msg);
+        return this.message + item_msg;
+    }
+
+    public String getMessage() {
+        return this.message;
     }
 }

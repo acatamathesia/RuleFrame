@@ -2,7 +2,6 @@ package com.ruleframe.core.group.strategy;
 
 import com.ruleframe.core.group.GroupResult;
 import com.ruleframe.core.group.RuleGroup;
-import com.ruleframe.core.condition.ConditionResult;
 import com.ruleframe.core.fact.FactContext;
 import com.ruleframe.core.rule.Rule;
 import com.ruleframe.core.rule.RuleResult;

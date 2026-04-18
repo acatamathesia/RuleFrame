@@ -1,7 +1,6 @@
 package com.ruleframe;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.List;
 
 import com.ruleframe.core.element.ConfigurableElement;
