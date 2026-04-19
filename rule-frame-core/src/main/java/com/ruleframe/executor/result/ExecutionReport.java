@@ -78,29 +78,55 @@ public class ExecutionReport {
 
     /**
      * 创建成功的执行报告
+     * 成功时只返回基本信息，减少数据量
      * @param groupKey 规则组键
      * @param duration 执行耗时
      * @param groupResult 组结果
-     * @param ruleResults 规则结果列表
+     * @param ruleResults 规则结果列表（成功时可为null）
      * @return 执行报告
      */
     public static ExecutionReport success(String groupKey, long duration, GroupResult groupResult, List<RuleResult> ruleResults) {
-        return new ExecutionReport(groupKey, true, duration, groupResult, ruleResults);
+        ExecutionReport report = new ExecutionReport();
+        report.setGroupKey(groupKey);
+        report.setSuccess(true);
+        report.setDuration(duration);
+        report.setGroupResult(groupResult);
+        // 成功时不返回详细规则结果，减少数据量
+        report.setRuleResults(null);
+        report.setErrorMessage(null);
+        return report;
     }
 
     /**
      * 创建失败的执行报告
+     * 失败时提供详细的错误信息，便于排查问题
+     * @param groupKey 规则组键
+     * @param duration 执行耗时
+     * @param errorMessage 错误信息
+     * @param groupResult 组结果（可为null）
+     * @param ruleResults 规则结果列表，包含失败详情
+     * @return 执行报告
+     */
+    public static ExecutionReport failure(String groupKey, long duration, String errorMessage, GroupResult groupResult, List<RuleResult> ruleResults) {
+        ExecutionReport report = new ExecutionReport();
+        report.setGroupKey(groupKey);
+        report.setSuccess(false);
+        report.setDuration(duration);
+        report.setErrorMessage(errorMessage);
+        report.setGroupResult(groupResult);
+        // 失败时返回详细的规则结果，便于排查问题
+        report.setRuleResults(ruleResults);
+        return report;
+    }
+
+    /**
+     * 创建失败的执行报告（简化版）
      * @param groupKey 规则组键
      * @param duration 执行耗时
      * @param errorMessage 错误信息
      * @return 执行报告
      */
     public static ExecutionReport failure(String groupKey, long duration, String errorMessage) {
-        ExecutionReport report = new ExecutionReport();
-        report.setGroupKey(groupKey);
-        report.setSuccess(false);
-        report.setDuration(duration);
-        report.setErrorMessage(errorMessage);
-        return report;
+        return failure(groupKey, duration, errorMessage, null, null);
     }
 }
