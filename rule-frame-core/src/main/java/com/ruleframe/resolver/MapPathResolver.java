@@ -13,13 +13,15 @@ public class MapPathResolver implements PathResolver {
         if (context == null) {
             throw new IllegalArgumentException("缺少FactContext");
         }
-        if (!path.contains("*")) {
-            Object value = context.getValue(path);
+        // 去掉JSONPath的$.前缀，适配JsonFallternParser的扁平化键名
+        String lookupPath = path.startsWith("$.") ? path.substring(2) : path;
+        if (!lookupPath.contains("*")) {
+            Object value = context.getValue(lookupPath);
             Class<?> valueType = value != null ? value.getClass() : null;
             return ElementValue.success(value, value, valueType);
         }
         // 会返回一个集合
-        Object matchedValue = matchWithPathPattern(path, context);
+        Object matchedValue = matchWithPathPattern(lookupPath, context);
         Class<?> valueType = matchedValue != null ? matchedValue.getClass() : null;
         return ElementValue.success(matchedValue, matchedValue, valueType);
     }
@@ -111,3 +113,4 @@ public class MapPathResolver implements PathResolver {
     }
     
 }
+

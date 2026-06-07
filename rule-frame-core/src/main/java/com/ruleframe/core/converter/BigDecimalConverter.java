@@ -10,7 +10,7 @@ import com.ruleframe.exception.ConversionException;
 @AutoRegisterConverter
 public class BigDecimalConverter implements ValueConverter {
 
-    private final String TYPE_NAME = "to_bigdecimal";
+    private final String TYPE_NAME = "to_number";
     private final Pattern NUMBER_PATTERN = Pattern.compile("^[-+]?\\d+(\\.\\d+)?$");
 
     @Override
@@ -29,7 +29,7 @@ public class BigDecimalConverter implements ValueConverter {
     private Object convertListData(List<?> rawValue) {
         List<Object> resultList = rawValue.stream().map(this::simpleConvert).collect(Collectors.toList());
         if (resultList.stream().anyMatch(p -> p == null)) {
-            throw new ConversionException("转换器: ["+TYPE_NAME+"], 执行失败, 原始数据不是数字类型. 原始数据: " + rawValue);
+            throw new ConversionException("转换器: [" + TYPE_NAME + "], 执行失败, 原始数据不是数字类型. 原始数据: " + rawValue);
         }
         return resultList;
     }
@@ -43,10 +43,10 @@ public class BigDecimalConverter implements ValueConverter {
             return new BigDecimal(rawValue.toString());
         }
         // 判断是否是字符串
-        if (rawValue instanceof String && NUMBER_PATTERN.matcher((String)rawValue).matches()) {
+        if (rawValue instanceof String && NUMBER_PATTERN.matcher((String) rawValue).matches()) {
             return new BigDecimal((String) rawValue);
         }
         return null;
     }
-    
+
 }

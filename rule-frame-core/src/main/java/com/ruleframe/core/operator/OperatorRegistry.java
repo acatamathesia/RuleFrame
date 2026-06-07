@@ -4,9 +4,10 @@ import com.ruleframe.utils.AnnotationScannerRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Map;
+
 /**
- * 运算符的注册表，支持自动扫描和注册
- * 使用 @AutoRegisterOperator 注解标记的运算符会自动被注册
+ * 运算符的注册表，支持自动扫描和注册 使用 @AutoRegisterOperator 注解标记的运算符会自动被注册
  */
 public class OperatorRegistry {
 
@@ -16,6 +17,17 @@ public class OperatorRegistry {
      * 运算符所在的包路径
      */
     private static final String OPERATOR_PACKAGE = "com.ruleframe.core.operator";
+
+    /**
+     * 运算符名称别名映射：将外部配置中的名称映射为内部注册的运算符名称
+     */
+    private static final Map<String, String> ALIAS_MAP = Map.of(
+            "GREATER_THAN", ">",
+            "GREATER_EQUAL", ">=",
+            "LESS_THAN", "<",
+            "EQUAL", "=",
+            "NOT_EQUAL", "!=",
+            "LESS_EQUAL", "<=");
 
     /**
      * 使用通用注解扫描注册器
@@ -44,10 +56,19 @@ public class OperatorRegistry {
     }
 
     /**
-     * 根据名称获取运算符
+     * 根据名称获取运算符，支持别名映射
      */
     public static Operator getOperator(String name) {
-        return registry.get(name);
+        if (name == null)
+            return null;
+        Operator op = registry.get(name);
+        if (op == null) {
+            String mappedName = ALIAS_MAP.get(name);
+            if (mappedName != null) {
+                op = registry.get(mappedName);
+            }
+        }
+        return op;
     }
 
     /**
@@ -61,7 +82,9 @@ public class OperatorRegistry {
      * 检查是否包含指定名称的运算符
      */
     public static boolean hasOperator(String name) {
-        return registry.has(name);
+        if (name == null)
+            return false;
+        return registry.has(name) || ALIAS_MAP.containsKey(name);
     }
 
     /**
@@ -69,12 +92,5 @@ public class OperatorRegistry {
      */
     public static java.util.Set<String> getRegisteredNames() {
         return registry.getRegisteredKeys();
-    }
-
-    /**
-     * 清空所有注册的运算符
-     */
-    public static void clear() {
-        registry.clear();
     }
 }
